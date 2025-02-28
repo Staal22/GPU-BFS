@@ -1,4 +1,9 @@
 ﻿#include <iostream>
+#include <nvshmem.h>
+
+#ifdef __JETBRAINS_IDE__
+#include <host/nvshmem_api.h>
+#endif
 
 int main()
 {
