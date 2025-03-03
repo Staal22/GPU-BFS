@@ -16,7 +16,8 @@ find_library(
         REQUIRED
 )
 
-include_directories(${NVSHMEM_INCLUDE_DIR})
+include_directories(${NVSHMEM_INCLUDE_DIR}
+        ../fast_matrix_market/include)
 
 add_executable(GPU_BFS main.cu)
 
