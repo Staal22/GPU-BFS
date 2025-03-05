@@ -1,8 +1,5 @@
 ﻿cmake_minimum_required(VERSION 3.28)
 
-set(CMAKE_CUDA_ARCHITECTURES native)
-add_executable(GPU_BFS main.cu)
-
 if (EXISTS "${CMAKE_SOURCE_DIR}/local_config.cmake")
     include(local_config.cmake)
 endif ()
