@@ -79,5 +79,5 @@ fabric.properties
 # JetBrains
 .idea
 
-# Local cmake config
+# Local CMake config
 local_config.cmake
