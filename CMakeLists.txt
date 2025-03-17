@@ -9,6 +9,8 @@ project(GPU_BFS CUDA)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CUDA_STANDARD 20)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 include_directories(../fast_matrix_market/include)
 
 set_target_properties(GPU_BFS PROPERTIES
