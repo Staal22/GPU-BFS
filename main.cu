@@ -43,9 +43,8 @@ struct device_csr_matrix
 __global__ void bfs_kernel(
     const int64_t* row_ptr,
     const int64_t* cols,
-    const double* vals,
     int level,
-    int* current_frontier,
+    const int* current_frontier,
     int* next_frontier,
     int* visited,
     int* levels,
@@ -150,7 +149,7 @@ csr_matrix csr_from_coo(const triplet_matrix& coo)
 
 device_csr_matrix copy_csr_to_device(const csr_matrix& csr)
 {
-    device_csr_matrix d_csr;
+    device_csr_matrix d_csr{};
     d_csr.nrows = csr.nrows;
     d_csr.ncols = csr.ncols;
 
@@ -170,7 +169,7 @@ device_csr_matrix copy_csr_to_device(const csr_matrix& csr)
     return d_csr;
 }
 
-void free_device_csr(device_csr_matrix& d_csr)
+void free_device_csr(const device_csr_matrix& d_csr)
 {
     CUDA_CHECK(cudaFree(d_csr.row_ptr));
     CUDA_CHECK(cudaFree(d_csr.cols));
@@ -238,7 +237,6 @@ std::vector<int> bfs_csr_cuda(const csr_matrix& csr, int start_node)
         bfs_kernel<<<grid_size, block_size>>>(
             d_csr.row_ptr,
             d_csr.cols,
-            d_csr.vals,
             level,
             d_current_frontier,
             d_next_frontier,
@@ -265,7 +263,6 @@ std::vector<int> bfs_csr_cuda(const csr_matrix& csr, int start_node)
     std::vector<int> levels(csr.nrows);
     CUDA_CHECK(cudaMemcpy(levels.data(), d_levels, csr.nrows * sizeof(int), cudaMemcpyDeviceToHost));
 
-    // Free device memory
     CUDA_CHECK(cudaFree(d_current_frontier));
     CUDA_CHECK(cudaFree(d_next_frontier));
     CUDA_CHECK(cudaFree(d_visited));
@@ -279,7 +276,7 @@ std::vector<int> bfs_csr_cuda(const csr_matrix& csr, int start_node)
 
 std::vector<int> find_connected_components(const csr_matrix& csr)
 {
-    std::vector<int> components(csr.nrows, -1);
+    std::vector components(csr.nrows, -1);
     int component_count = 0;
 
     for (int i = 0; i < csr.nrows; i++)
@@ -532,7 +529,6 @@ int main()
     std::cout << "CSR Matrix: " << csr.nrows << "x" << csr.ncols
             << " with " << csr.vals.size() << " non-zeros\n";
 
-    // run_bfs_example(csr);
     bfs_battery(csr);
 
     return 0;
