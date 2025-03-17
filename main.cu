@@ -317,7 +317,7 @@ void bfs_battery(const csr_matrix& csr, std::vector<int> sample_nodes = {0})
         for (int start_node: sample_nodes)
         {
             std::cout << "\n---------------------------------------------\n";
-            std::cout << "BFS Analysis from Node " << start_node << "\n";
+            std::cout << "BFS Analysis from Node " << start_node + 1 << "\n";
             std::cout << "---------------------------------------------\n";
 
             std::vector<int> levels = bfs_csr_cuda(csr, start_node);
@@ -326,7 +326,7 @@ void bfs_battery(const csr_matrix& csr, std::vector<int> sample_nodes = {0})
             int max_level = *std::max_element(levels.begin(), levels.end());
 
             // Count nodes at each level
-            std::vector<int> level_counts(max_level + 1, 0);
+            std::vector level_counts(max_level + 1, 0);
             for (int level: levels)
             {
                 if (level != -1)
@@ -378,7 +378,7 @@ void bfs_battery(const csr_matrix& csr, std::vector<int> sample_nodes = {0})
                     int node_idx = j * nodes_at_level.size() / samples;
                     int node = nodes_at_level[node_idx];
 
-                    std::cout << node;
+                    std::cout << node + 1;
 
                     // Count outgoing and incoming edges for this node
                     int outgoing = csr.row_ptr[node + 1] - csr.row_ptr[node];
@@ -431,7 +431,7 @@ void bfs_battery(const csr_matrix& csr, std::vector<int> sample_nodes = {0})
             // For the first sampled node, show paths to a few interesting nodes
             if (start_node == sample_nodes[0])
             {
-                std::cout << "\nSample paths from node " << start_node << ":\n";
+                std::cout << "\nSample paths from node " << start_node + 1 << ":\n";
 
                 // Get some sample destination nodes at different levels
                 std::vector<int> sample_destinations;
@@ -450,7 +450,7 @@ void bfs_battery(const csr_matrix& csr, std::vector<int> sample_nodes = {0})
                 // For each sample destination, reconstruct and print the path
                 for (int dest: sample_destinations)
                 {
-                    std::cout << "  Path to node " << dest << " (level " << levels[dest] << "): ";
+                    std::cout << "  Path to node " << dest + 1 << " (level " << levels[dest] << "): ";
 
                     // Reconstruct path (approximate, since we don't store actual paths in BFS)
                     std::vector<int> path;
@@ -481,7 +481,7 @@ void bfs_battery(const csr_matrix& csr, std::vector<int> sample_nodes = {0})
                     // Print the path in reverse order (from source to destination)
                     for (int i = path.size() - 1; i >= 0; i--)
                     {
-                        std::cout << path[i];
+                        std::cout << path[i] + 1;
                         if (i > 0) std::cout << " -> ";
                     }
                     std::cout << "\n";
